@@ -13,14 +13,16 @@ import java.util.Calendar;
 public class Controller {
 
     @GetMapping
-    public String returnString(){
+    public String returnString() throws InterruptedException {
+        Thread.sleep(1000);
         return "{\"login\":\"Login1\",\"status\":\"ok\"}";
     }
 
     @PostMapping
-    public String postMethod(String login, String password){
+    public String postMethod(String login, String password) throws InterruptedException {
+        Thread.sleep(1000);
         LocalDateTime date = LocalDateTime.now();
-        return "{\"login\":\"" + login + "\",\"password\":\" " + password + "\",\"date\":\"" + date + "}";
+        return "{\"login\":\"" + login + "\",\"password\":\" " + password + "\",\"date\":\"" + date + "\"}";
     }
 
 }
