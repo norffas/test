@@ -1,33 +1,54 @@
 package org.example.example.controllers;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
+import org.example.example.model.GetModel;
+import org.example.example.model.PostModel;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
-import java.util.Calendar;
 import java.util.Random;
 
 @RestController
 @RequestMapping()
 public class Controller {
+    Random random = new Random();
+    @Value("${startValue}")
+    int start;
+    @Value("${endValue}")
+    int end;
 
+    @ResponseBody
     @GetMapping
-    public String returnString() throws InterruptedException {
-        Random random = new Random();
-        int a = random.nextInt(1000) + 950;
-        Thread.sleep(a);
-        return "{\"login\":\"Login1\",\"status\":\"ok\"}";
+    public ResponseEntity<GetModel> returnString() throws InterruptedException {
+        pause();
+        return new ResponseEntity<>(new GetModel("login1", "status"), HttpStatus.OK);
     }
 
+    @Validated
     @PostMapping
-    public String postMethod(String login, String password) throws InterruptedException {
-        Random random = new Random();
-        int a = random.nextInt(1000) + 950;
-        Thread.sleep(a);
+    public ResponseEntity<PostModel> postMethod(@Size(min = 4, max = 10)String login, String password) throws InterruptedException {
+        pause();
         LocalDateTime date = LocalDateTime.now();
-        return "{\"login\":\"" + login + "\",\"password\":\" " + password + "\",\"date\":\"" + date + "\"}";
+        return new ResponseEntity<>( new PostModel(login, password, date), HttpStatus.OK);
+    }
+
+    public void pause() throws InterruptedException {
+        Thread.sleep(random.nextInt(start) + end - start);
     }
 
 }
+//response entity
+//убрать дублирование кода
+//application properties
+//параметризовать значения задержки
+// тип даты
+//переоформить скрипты
+//jdk jre
+//jolokia 2
