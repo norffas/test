@@ -2,6 +2,7 @@ package org.example.example.controllers;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
+import org.example.example.dto.PostModelDTO;
 import org.example.example.model.GetModel;
 import org.example.example.model.PostModel;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,12 +32,12 @@ public class Controller {
         return new ResponseEntity<>(new GetModel("login1", "status"), HttpStatus.OK);
     }
 
-    @Validated
+
     @PostMapping
-    public ResponseEntity<PostModel> postMethod(@Size(min = 4, max = 10)String login, String password) throws InterruptedException {
+    public ResponseEntity<PostModel> postMethod(@Valid @RequestBody PostModelDTO dto) throws InterruptedException {
         pause();
         LocalDateTime date = LocalDateTime.now();
-        return new ResponseEntity<>( new PostModel(login, password, date), HttpStatus.OK);
+        return new ResponseEntity<>( new PostModel(dto.getLogin(), dto.getPassword(), date), HttpStatus.OK);
     }
 
     public void pause() throws InterruptedException {
