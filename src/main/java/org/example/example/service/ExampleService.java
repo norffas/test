@@ -1,34 +1,43 @@
 package org.example.example.service;
 
-import org.example.example.dto.PostModelDTO;
+import lombok.RequiredArgsConstructor;
+import org.example.example.dto.UserDTO;
+
 import org.example.example.exceptions.ServiceException;
-import org.example.example.models.GetModel;
-import org.example.example.models.PostModel;
+import org.example.example.models.User;
+import org.example.example.repo.DataBaseWorkerRepo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
+@RequiredArgsConstructor
 public class ExampleService {
+    private final DataBaseWorkerRepo repo;
     Random random = new Random();
     @Value("${startValue}")
     int start;
     @Value("${endValue}")
     int end;
 
-    public GetModel getResponse(){
+    public User findUser(String login){
         pause();
-        GetModel model = new GetModel("login1", "status");
-        return model;
+        Optional<User> userBox = repo.showUser(login);
+        if(userBox.isPresent())
+            return userBox.get();
+        else
+            throw new ServiceException("User not found");
     }
 
-    public PostModel postMethod(PostModelDTO dto){
+    public int addUser(UserDTO dto){
         pause();
         LocalDateTime date = LocalDateTime.now();
-        PostModel model = new PostModel(dto.getLogin(), dto.getPassword(), date);
-        return model;
+        User user = new User(dto.getLogin(), dto.getPassword(), date, dto.getEmail());
+        return repo.addUser(user);
     }
 
     private void pause(){

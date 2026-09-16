@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class PostModelDTO {
+public class UserDTO {
     @Size(min = 4, max = 10)
     @NotBlank
     private String login;
@@ -16,6 +16,8 @@ public class PostModelDTO {
     @Size(min = 4, max = 10)
     @Pattern(regexp = "\\d+")
     private String password;
-
+    @NotBlank
+    @Size(min = 4, max = 10)
+    private String email;
 
 }
