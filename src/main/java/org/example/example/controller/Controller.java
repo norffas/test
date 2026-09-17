@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.example.dto.UserDTO;
 import org.example.example.exceptions.RepoException;
+import org.example.example.exceptions.ServiceException;
 import org.example.example.models.User;
 import org.example.example.service.ExampleService;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class Controller {
         try{
             User user = service.findUser(login);
             return new ResponseEntity<>(user, HttpStatus.OK);
-        } catch (Exception e) {
+        } catch (ServiceException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

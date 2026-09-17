@@ -5,7 +5,6 @@ import org.example.example.models.User;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -16,25 +15,25 @@ public class DataBaseWorkerRepo {
     String password = "admin";
 
     public Optional<User> showUser(String login){
-        Optional user = Optional.empty();
+        Optional<User> user = Optional.empty();
         try(Connection connect = connectBase();
             PreparedStatement selectQuery = connect.prepareStatement("SELECT table_1.login, table_1.password, table_1.date, table_2.email " +
                     "FROM table_1 join table_2 on table_1.login = table_2.login " +
                     "where table_1.login = ?");
         ){
             selectQuery.setString(1, login);
-            ResultSet result = selectQuery.executeQuery();
-            if(result.next()){
-                String userLogin = result.getString(1);
-                String password = result.getString(2);
-                LocalDateTime date = result.getObject(3, LocalDateTime.class);
-                String userEmail = result.getString(4);
-                user = Optional.of(new User(userLogin, password, date, userEmail));
+            try(ResultSet result = selectQuery.executeQuery()){
+                if(result.next()){
+                    String userLogin = result.getString(1);
+                    String password = result.getString(2);
+                    LocalDateTime date = result.getObject(3, LocalDateTime.class);
+                    String userEmail = result.getString(4);
+                    user = Optional.of(new User(userLogin, password, date, userEmail));
+                }
+                return user;
             }
-            return user;
-
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepoException(e);
         }
     }
 
@@ -48,13 +47,16 @@ public class DataBaseWorkerRepo {
                     "INSERT INTO table_2(login, email) VALUES (?, ?); " +
                     "INSERT INTO table_1(login, password, date) VALUES (?, ?, ?)");
         ) {
+            //connect.setAutoCommit(false);
+            insertQuery.setString(1, login);
+            insertQuery.setString(2, email);
             insertQuery.setString(3, login);
             insertQuery.setString(4, password);
             insertQuery.setObject(5, date);
-            insertQuery.setString(1, login);
-            insertQuery.setString(2, email);
+            //connect.commit();
             return insertQuery.executeUpdate();
         } catch (SQLException e) {
+            //connect.rollback();
             throw new RepoException("User with this login is already exists");
         }
     }
@@ -64,7 +66,7 @@ public class DataBaseWorkerRepo {
             Connection connect = DriverManager.getConnection(url, login, password);
             return connect;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RepoException(e);
         }
     }
 }
