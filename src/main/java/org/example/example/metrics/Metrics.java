@@ -1,3 +1,5 @@
+package org.example.example.metrics;
+
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.boot.micrometer.metrics.autoconfigure.MeterRegistryCustomizer;
 import org.springframework.context.annotation.Bean;
