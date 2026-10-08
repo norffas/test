@@ -46,7 +46,7 @@ public class ExampleService {
         User user = new User(dto.getLogin(), dto.getPassword(), date, dto.getEmail());
         try{
             result = repo.addUser(user);
-            fileRepo.addEntity(user);
+            //fileRepo.addEntity(user);
         }
         catch (RepoException | FileException e){
             throw new ServiceException(e.getMessage());
