@@ -2,6 +2,7 @@ package org.example.example.repo;
 
 import org.example.example.exceptions.RepoException;
 import org.example.example.models.User;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -10,9 +11,12 @@ import java.util.Optional;
 
 @Repository
 public class DataBaseWorkerRepo {
-    String url = "jdbc:postgresql://192.168.0.108:5433/example_DB";
-    String login = "admin";
-    String password = "admin";
+    @Value("${url}")
+    String url;
+    @Value("${login}")
+    String login;
+    @Value("${password}")
+    String password;
 
     public Optional<User> showUser(String login){
         Optional<User> user = Optional.empty();
@@ -33,7 +37,7 @@ public class DataBaseWorkerRepo {
                 return user;
             }
         } catch (SQLException e) {
-            throw new RepoException(e);
+            throw new RepoException("Ошибка при попытке найти пользователя в БД" ,e);
         }
     }
 
@@ -66,7 +70,7 @@ public class DataBaseWorkerRepo {
             Connection connect = DriverManager.getConnection(url, login, password);
             return connect;
         } catch (Exception e) {
-            throw new RepoException(e);
+            throw new RepoException("Ошибка при подключении к БД",e);
         }
     }
 }
