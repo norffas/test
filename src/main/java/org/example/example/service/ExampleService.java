@@ -32,7 +32,7 @@ public class ExampleService {
         Optional<User> userBox = repo.showUser(login);
         if(userBox.isPresent()){
             User user = userBox.get();
-            fileRepo.addEntity(user);
+            //fileRepo.addEntity(user);
             return user;
         }
         else
