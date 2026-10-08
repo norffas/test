@@ -19,24 +19,34 @@ public class Controller {
 
 
     @ResponseBody
-    @GetMapping
+    @GetMapping("/user")
     public ResponseEntity<User> showUser(String login){
         try{
             User user = service.findUser(login);
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (ServiceException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch(RepoException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
+    @GetMapping("/randomString")
+    public ResponseEntity<String> getRandomString(){
+        try{
+            return new ResponseEntity<>(service.getString(), HttpStatus.OK);
+        }
+        catch (ServiceException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @PostMapping
     public ResponseEntity<String> addUser(@Valid @RequestBody UserDTO dto){
-        //400
         try{
             return new ResponseEntity<>(service.addUser(dto) + "", HttpStatus.OK);
         }
-        catch (RepoException e){
+        catch (ServiceException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
