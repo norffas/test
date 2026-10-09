@@ -20,7 +20,7 @@ import java.util.*;
 public class ExampleService {
     private final DataBaseWorkerRepo repo;
     private final FileWorker fileRepo;
-    private final List<Integer> list = new ArrayList<>();
+    private final List<Object> list = new ArrayList<>();
     Random random = new Random();
     @Value("${startValue}")
     int start;
@@ -66,8 +66,9 @@ public class ExampleService {
     }
 
     public void newMethod(){
-        for (int i = 0; i < 100; i++) {
-            list.add(i);
+        for (int i = 0; i < 10000; i++) {
+            String a = new String("qwerty" + i);
+            list.add(a);
         }
     }
 
