@@ -13,14 +13,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class ExampleService {
     private final DataBaseWorkerRepo repo;
     private final FileWorker fileRepo;
+    private final List<Integer> list = new ArrayList<>();
     Random random = new Random();
     @Value("${startValue}")
     int start;
@@ -64,6 +64,14 @@ public class ExampleService {
             throw new ServiceException(e.getMessage(), e);
         }
     }
+
+    public void newMethod(){
+        for (int i = 0; i < 100; i++) {
+            list.add(i);
+        }
+    }
+
+
 
     private void pause(){
         try{

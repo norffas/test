@@ -31,6 +31,11 @@ public class Controller {
         }
     }
 
+    @GetMapping("/heapMethod")
+    public void heapMethod(){
+        service.newMethod();
+    }
+
     @GetMapping("/randomString")
     public ResponseEntity<String> getRandomString(){
         try{
